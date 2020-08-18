@@ -1,40 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Recipes from "./Recipes";
 import Pagination from "./Pagination";
-
-//material-ui
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import NativeSelect from "@material-ui/core/NativeSelect";
+import useDropdownSelect from "./useDropdownSelect";
+import {
+  URL_BASE,
+  URL_RECIPES,
+  URL_INGREDIENTS,
+  URL_CATEGORIES,
+  URL_AREAS,
+} from "../api";
 import { Button, Box } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 200,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(0),
-  },
-  container: {
-    margin: theme.spacing(5),
-  },
-}));
-
-const URL_INGREDIENTS =
-  "https://www.themealdb.com/api/json/v1/1/list.php?i=list";
-
-const URL_RECIPES = "https://www.themealdb.com/api/json/v1/1/filter.php?i=";
-
 const RecipeFilters = () => {
-  const classes = useStyles();
-
   const [recipes, setRecipes] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  const [ingredient, setIngredient] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [ingredient, IngredientDropdownSelect] = useDropdownSelect(
+    "Main ingredient",
+    "",
+    ingredients
+  );
+  const [category, CategoryDropdownSelect] = useDropdownSelect(
+    "Category",
+    "",
+    categories
+  );
+  const [area, AreaDropdownSelect] = useDropdownSelect("Area", "", areas);
   const [loading, setLoading] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [recipesPerPage] = useState(6);
 
@@ -48,26 +41,54 @@ const RecipeFilters = () => {
 
     fetchRecipes();
 
-    fetch(URL_INGREDIENTS)
-      .then((response) => response.json())
-      .then((data) => {
-        const ingredientsStrings = data.meals
-          .map(({ strIngredient }) => strIngredient)
-          //remove duplicates
-          .reduce(
-            (unique, item) =>
-              unique.includes(item) ? unique : [...unique, item],
-            []
-          )
-          .sort();
-        setIngredients(ingredientsStrings);
-      });
+    const fetchIngredients = async (url) => {
+      const data = await fetch(url).then((response) => response.json());
+      const ingredientsStrings = data.meals
+        .map(({ strIngredient }) => strIngredient)
+        //remove duplicates
+        .reduce(
+          (unique, item) =>
+            unique.includes(item) ? unique : [...unique, item],
+          []
+        )
+        .sort();
+      setIngredients(ingredientsStrings);
+    };
+    const fetchCategories = async (url) => {
+      const data = await fetch(url).then((response) => response.json());
+      const categoriesStrings = data.meals
+        .map(({ strCategory }) => strCategory)
+        .sort();
+      setCategories(categoriesStrings);
+    };
+    const fetchAreas = async (url) => {
+      const data = await fetch(url).then((response) => response.json());
+      const areasStrings = data.meals.map(({ strArea }) => strArea).sort();
+      setAreas(areasStrings);
+    };
+    fetchIngredients(URL_INGREDIENTS);
+    fetchCategories(URL_CATEGORIES);
+    fetchAreas(URL_AREAS);
   }, []);
 
-  async function filterRecipes(ingredient) {
-    let url = URL_RECIPES + `${ingredient}`;
-    setLoading(true);
+  async function filterRecipes(ingredient, category, area) {
+    let url = URL_BASE + "filter.php?";
+    let params = new URLSearchParams();
+    if (!ingredient && !category && !area) {
+      url += "i=";
+    }
+    if (ingredient) {
+      params.append("i", ingredient);
+    }
+    if (category) {
+      params.append("c", category);
+    }
+    if (area) {
+      params.append("a", area);
+    }
+    url += params.toString();
 
+    setLoading(true);
     await fetch(url)
       .then((response) => response.json())
       .then(({ meals }) => {
@@ -80,7 +101,9 @@ const RecipeFilters = () => {
   function handleSubmit(event) {
     event.preventDefault();
     const ingredientString = ingredient.replace(" ", "_").toLowerCase();
-    filterRecipes(ingredientString);
+    const categoryString = category.replace(" ", "_").toLowerCase();
+    const areaString = area.replace(" ", "_").toLowerCase();
+    filterRecipes(ingredientString, categoryString, areaString);
   }
 
   //Pagination
@@ -92,24 +115,18 @@ const RecipeFilters = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit}>
-        <Box display="flex" justifyContent="center" alignItems="center" mb={3}>
-          <FormControl className={classes.formControl}>
-            <InputLabel shrink>Main ingredient</InputLabel>
-            <NativeSelect
-              disabled={!ingredients.length}
-              id="ingredient"
-              value={ingredient}
-              onChange={(e) => setIngredient(e.target.value)}
-              onBlur={(e) => setIngredient(e.target.value)}
-            >
-              <option value="">Any</option>
-              {ingredients.map((ingredient) => (
-                <option key={ingredient} value={ingredient}>
-                  {ingredient}
-                </option>
-              ))}
-            </NativeSelect>
-          </FormControl>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          alignItems="center"
+          mb={3}
+        >
+          {/* Filter dropdown selects */}
+          <IngredientDropdownSelect />
+          <CategoryDropdownSelect />
+          <AreaDropdownSelect />
+
           <Button type="submit" variant="contained" color="primary">
             Filter
           </Button>
