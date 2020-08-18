@@ -1,8 +1,16 @@
 import React from "react";
 import Recipe from "./Recipe";
-import { Grid } from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 
-const RecipeList = ({ recipes }) => {
+const Recipes = ({ recipes, loading }) => {
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" m={3}>
+        <h2>Loading...</h2>
+      </Box>
+    );
+  }
+
   return (
     <Grid
       container
@@ -29,4 +37,4 @@ const RecipeList = ({ recipes }) => {
   );
 };
 
-export default RecipeList;
+export default Recipes;
