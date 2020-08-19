@@ -1,18 +1,16 @@
 import React from "react";
-
-//material-ui
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-import { Grid } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
-  typography: {
-    fontSize: 12,
-  },
   root: {
     width: 350,
   },
@@ -21,19 +19,25 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Recipe({ name, thumbnail }) {
+export default function Recipe({ id, name, thumbnail }) {
   const classes = useStyles();
 
   return (
     <Grid item>
-      <Card spacing={5} className={classes.root}>
-        <CardActionArea>
-          <CardMedia className={classes.media} image={thumbnail} title={name} />
-          <CardContent>
-            <Typography gutterBottom>{name}</Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      <Link to={`/recipes/details/${id}`}>
+        <Card spacing={5} className={classes.root}>
+          <CardActionArea>
+            <CardMedia
+              className={classes.media}
+              image={thumbnail}
+              title={name}
+            />
+            <CardContent>
+              <Typography gutterBottom>{name}</Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
+      </Link>
     </Grid>
   );
 }
