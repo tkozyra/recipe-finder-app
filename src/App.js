@@ -3,12 +3,15 @@ import RecipeFilters from "./components/RecipeFilters";
 import RecipeDetails from "./components/RecipeDetails";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, Box } from "@material-ui/core";
-
+import MainNavigation from "./components/navigation/MainNavigation";
+import MobileNavigation from "./components/navigation/MobileNavigation";
 const App = () => {
   return (
-    <Box>
+    <Box paddingBottom={8}>
       <CssBaseline />
       <Router>
+        <MainNavigation />
+        <MobileNavigation />
         <Switch>
           <Route path="/recipes/details/:id">
             <RecipeDetails />
