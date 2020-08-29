@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { URL_BASE } from "../api";
+import { URL_BASE } from "../../api";
 import { useParams, Link } from "react-router-dom";
-import IngredientList from "./IngredientsList";
+import IngredientList from "../ingredients/IngredientsList";
 import { Container, Typography, Grid, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";

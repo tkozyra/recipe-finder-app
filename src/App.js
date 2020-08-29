@@ -1,6 +1,6 @@
 import React from "react";
-import RecipeFilters from "./components/RecipeFilters";
-import RecipeDetails from "./components/RecipeDetails";
+import RecipeFilters from "./components/recipes/RecipeFilters";
+import RecipeDetails from "./components/recipes/RecipeDetails";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, Box } from "@material-ui/core";
 import MainNavigation from "./components/navigation/MainNavigation";

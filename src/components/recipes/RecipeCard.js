@@ -12,20 +12,21 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
-    width: 350,
+    width: 360,
+    maxWidth: "100vw",
   },
   media: {
-    height: 200,
+    height: 180,
   },
 });
 
-export default function Recipe({ id, name, thumbnail }) {
+export default function RecipeCard({ id, name, thumbnail }) {
   const classes = useStyles();
 
   return (
-    <Grid item>
+    <Grid item className={classes.root}>
       <Link to={`/recipes/details/${id}`}>
-        <Card spacing={5} className={classes.root}>
+        <Card>
           <CardActionArea>
             <CardMedia
               className={classes.media}

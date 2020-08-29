@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Recipes from "./Recipes";
-import Pagination from "./Pagination";
-import useDropdownSelect from "./useDropdownSelect";
+import Pagination from "../Pagination";
+import useDropdownSelect from "../../hooks/useDropdownSelect";
 import {
   URL_BASE,
   URL_RECIPES,
   URL_INGREDIENTS,
   URL_CATEGORIES,
   URL_AREAS,
-} from "../api";
+} from "../../api";
 import { Button, Box } from "@material-ui/core";
 
 const RecipeFilters = () => {
@@ -28,9 +28,8 @@ const RecipeFilters = () => {
   );
   const [area, AreaDropdownSelect] = useDropdownSelect("Area", "", areas);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recipesPerPage] = useState(6);
 
+  // get recipes from api
   useEffect(() => {
     const fetchRecipes = async () => {
       setLoading(true);
@@ -40,7 +39,10 @@ const RecipeFilters = () => {
     };
 
     fetchRecipes();
+  }, []);
 
+  //get ingredients, categories and areas from api
+  useEffect(() => {
     const fetchIngredients = async (url) => {
       const data = await fetch(url).then((response) => response.json());
       const ingredientsStrings = data.meals
@@ -107,6 +109,8 @@ const RecipeFilters = () => {
   }
 
   //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recipesPerPage] = useState(6);
   const indexOfLastRecipe = currentPage * recipesPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
   const currentRecipes = recipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
@@ -124,7 +128,9 @@ const RecipeFilters = () => {
         >
           {/* Filter dropdown selects */}
           <IngredientDropdownSelect />
+
           <CategoryDropdownSelect />
+
           <AreaDropdownSelect />
 
           <Button type="submit" variant="contained" color="primary">

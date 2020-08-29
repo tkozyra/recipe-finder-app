@@ -23,16 +23,17 @@ const Pagination = ({
   };
 
   if (totalElements <= 0) {
-    return <Box></Box>;
+    return <div></div>;
   }
 
   return (
     <Box display="flex" justifyContent="center" my={5}>
       <Pag
+        size="small"
         count={numberOfPages}
         page={page}
         onChange={handleChange}
-        color="primary"
+        color="secondary"
       />
     </Box>
   );

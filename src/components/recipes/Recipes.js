@@ -1,5 +1,5 @@
 import React from "react";
-import Recipe from "./Recipe";
+import RecipeCard from "./RecipeCard";
 import { Container, Grid, Box, CircularProgress } from "@material-ui/core";
 
 const Recipes = ({ recipes, loading }) => {
@@ -18,14 +18,14 @@ const Recipes = ({ recipes, loading }) => {
         direction="row"
         justify="center"
         alignItems="flex-start"
-        spacing={6}
+        spacing={4}
       >
         {!recipes.length ? (
           <h1>No recipes found!</h1>
         ) : (
           recipes.map((recipe) => {
             return (
-              <Recipe
+              <RecipeCard
                 key={recipe.idMeal}
                 id={recipe.idMeal}
                 name={recipe.strMeal}
