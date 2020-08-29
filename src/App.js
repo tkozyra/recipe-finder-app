@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, Box } from "@material-ui/core";
 import MainNavigation from "./components/navigation/MainNavigation";
 import MobileNavigation from "./components/navigation/MobileNavigation";
+import IngredientsView from "./components/ingredients/IngredientsView";
 const App = () => {
   return (
     <Box paddingBottom={8}>
@@ -15,6 +16,9 @@ const App = () => {
         <Switch>
           <Route path="/recipes/details/:id">
             <RecipeDetails />
+          </Route>
+          <Route path="/ingredients">
+            <IngredientsView />
           </Route>
           <Route path="/">
             <RecipeFilters />
